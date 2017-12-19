@@ -1,4 +1,4 @@
-/* full task: https://adventofcode.com/2017/day/1
+/* full task 1st day: https://adventofcode.com/2017/day/1
 
  find the sum of all digits that match the next digit in the list. The list is circular, so the digit after the last digit is the first digit in the list.
 
@@ -37,7 +37,7 @@ function sumOfMatches(input){
 
 */
 
-function sumOfMatches(input){
+function sumOfMatches2(input){
     return input.split('').reduce((acc, curr, index, array)=>{
         let next = index + array.length / 2 ;
         if( curr === array[ next >= array.length ? next - array.length : next ] ) return acc += Number(curr)
