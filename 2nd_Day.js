@@ -30,7 +30,7 @@ function maxMinDifference(inputArray){
 }
 
 //day 2 part 2
-/*
+/* full task link: https://adventofcode.com/2017/day/2
 the goal is to find the only two numbers in each row where one evenly divides the other - that is, where the result of the division operation is a whole number. They would like you to find those numbers on each line, divide them, and add up each line's result.
 
 For example, given the following spreadsheet:
