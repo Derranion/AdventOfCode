@@ -80,3 +80,63 @@ Once a square is written, its value does not change. Therefore, the first few sq
 362  747  806--->   ...
 What is the first value written that is larger than your puzzle input?
 */
+
+function roadToTheDream(input){
+    let circles = 1,
+        sideLength = 2,
+        maxCircles = 10,
+        maxLength = Math.pow( 1 + 2 * maxCircles, 2)
+        center = Math.floor( 1 + 2 * maxCircles / 2),
+        matrix = [],
+        //matrix = [...Array(maxLength)].fill([...Array(maxLength)]); //20 кругов, можно добавить создание если больше n circles -> ссылаются на одну и туже ячейку памяти
+        matrix[center][center] = 1;
+        currEl = 1,
+        currX = center,
+        currY = center;
+    //sideLength = 0
+
+    //set matrix
+    for(let i = 0; i < maxLength; i++){
+        let arr = []
+        for(let j = 0; j < maxLength; j++){
+            arr.push(0)
+        }
+        matrix.push(arr)
+    }
+
+// можно просто делать +2 на каждой расширении (как понять когда он расширяется? от circles зависит)
+    // function sideLength(){
+    // 	let size = Math.pow( 1 + 2 * circles, 2 ),
+    // 		prevSize = Math.pow ( 1 + 2 * (circles - 1), 2 );
+    // 	return (size - prevSize) / 4
+    // }
+
+// добавлять элементы по sideLength
+    function newCircle(){
+        currX++; currY++;
+
+        let whichSide = {
+            4: () => { currY--;  matrix[currX][currY] = 1;  }, // right, todo: function calculating sum of all around + add currEl check
+            3: () => { currX--;  matrix[currX][currY] = 1;  }, // top
+            2: () => { currY++;  matrix[currX][currY] = 1;  }, // left
+            1: () => { currX++;  matrix[currX][currY] = 1;  }  // bot
+        }
+
+        for(let sidesLeft = 4; sidesLeft > 0; sidesLeft--){
+            newSide(sidesLeft)
+        }
+
+        function newSide(sidesLeft){
+            for(sideL = sideLength; sideL > 0; sideL--){
+                whichSide[sidesLeft]()
+                currEl = matrix[currX][currY]
+            }
+        }
+
+        circles++
+        sideLength += 2
+    }
+
+    while( currE < input) newCircle()
+
+}
