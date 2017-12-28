@@ -23,18 +23,27 @@
  How many steps are required to carry the data from the square identified in your puzzle input all the way to the access port?
  */
 
-function roadToTheDream(input){
+
+/*
+   Manhattan distance can be used as well:
+   point A = (x,y), point B = (x2,y2), shortest way = | x - x2 | + | y - y2 |
+   but it will require more code ( forces to create coordinates )
+   so i chose to use dependencies that i found in a matrix
+*/
+function shortestWay(input){
+    if( input === 1 ) return 0
+
     let circles = 1,
         memSize = 9,
         prev = 1,
         curr = 2,
         next = {value: 0,
-            calc: function() { next.value = ( curr - prev + 8 ) + curr }
-            /* все числа находятся в этой зависимости, например:
-             числа перпендикулярные \ диагональные первому кругу(из нового круга)
-             связаны с ближайшими числами из предыдущего круга зависимостью:
-             возрастают на 8 больше чем предыдущие ( т.е. 1 2(+1) 11(+9) 28(+17) +25 +33 +41 ... ) */
-        };
+                calc: function() { this.value = ( curr - prev + 8 ) + curr }
+                /* все числа находятся в этой зависимости, например:
+                 числа перпендикулярные \ диагональные первому кругу(из нового круга)
+                 связаны с ближайшими числами из предыдущего круга зависимостью:
+                 возрастают на 8 больше чем предыдущие ( т.е. 1 2(+1) 11(+9) 28(+17) +25 +33 +41 ... ) */
+                };
 
     //находим номер круга (+размер +значение ближайшего там числа)
     while( memSize < input ){
@@ -60,7 +69,9 @@ function roadToTheDream(input){
     return circles + Math.min(...shortestDistances)
 }
 
-//day 3 part 2
+
+
+// day 3 part 2
 /*
 As a stress test on the system, the programs here clear the grid and then store the value 1 in square 1. Then, in the same allocation order as shown above, they store the sum of the values in all adjacent squares, including diagonals.
 
@@ -81,62 +92,59 @@ Once a square is written, its value does not change. Therefore, the first few sq
 What is the first value written that is larger than your puzzle input?
 */
 
-function roadToTheDream(input){
-    let circles = 1,
-        sideLength = 2,
-        maxCircles = 10,
-        maxLength = Math.pow( 1 + 2 * maxCircles, 2)
-        center = Math.floor( 1 + 2 * maxCircles / 2),
-        matrix = [],
-        //matrix = [...Array(maxLength)].fill([...Array(maxLength)]); //20 кругов, можно добавить создание если больше n circles -> ссылаются на одну и туже ячейку памяти
-        matrix[center][center] = 1;
-        currEl = 1,
+function nextVal(inputNum, rounds){
+    let circle = 1,
+        sideLength = 2, // side length for current circle
+        maxCircles = rounds || 10, // max circles around the 1st element, customizable
+        maxSide = 1 + 2 * maxCircles, // max side length of the matrix
+        center = maxCircles,
+        matrix = [...Array(maxSide)].map( el => [...Array(maxSide)].fill(0) ), // set matrix
+        // matrix = [...Array(maxLength)].fill([...Array(maxLength)]); // fill refers to the same memory every time = no 'pretty' way
         currX = center,
-        currY = center;
-    //sideLength = 0
+        currY = center,
+        currEl = 1;
+        matrix[center][center] = 1;
 
-    //set matrix
-    for(let i = 0; i < maxLength; i++){
-        let arr = []
-        for(let j = 0; j < maxLength; j++){
-            arr.push(0)
-        }
-        matrix.push(arr)
-    }
-
-// можно просто делать +2 на каждой расширении (как понять когда он расширяется? от circles зависит)
-    // function sideLength(){
-    // 	let size = Math.pow( 1 + 2 * circles, 2 ),
-    // 		prevSize = Math.pow ( 1 + 2 * (circles - 1), 2 );
-    // 	return (size - prevSize) / 4
-    // }
-
-// добавлять элементы по sideLength
-    function newCircle(){
-        currX++; currY++;
+    function addNewCircle(){
+        currX++; currY--;
 
         let whichSide = {
-            4: () => { currY--;  matrix[currX][currY] = 1;  }, // right, todo: function calculating sum of all around + add currEl check
-            3: () => { currX--;  matrix[currX][currY] = 1;  }, // top
-            2: () => { currY++;  matrix[currX][currY] = 1;  }, // left
-            1: () => { currX++;  matrix[currX][currY] = 1;  }  // bot
+            right: () => { currY++;  matrix[currX][currY] = sumAround('right');  },
+            top: () => { currX--;  matrix[currX][currY] = sumAround('top');  },
+            left: () => { currY--;  matrix[currX][currY] = sumAround('left');  },
+            bottom: () => { currX++;  matrix[currX][currY] = sumAround('bottom');  }
         }
 
-        for(let sidesLeft = 4; sidesLeft > 0; sidesLeft--){
-            newSide(sidesLeft)
+        for( let sidesLeft = ['right', 'top', 'left', 'bottom']; sidesLeft.length > 0; ){
+            newSide( sidesLeft.shift() )
+            if( currEl > inputNum ) return
         }
 
-        function newSide(sidesLeft){
-            for(sideL = sideLength; sideL > 0; sideL--){
-                whichSide[sidesLeft]()
-                currEl = matrix[currX][currY]
+        function newSide(side){
+            for(let sideL = sideLength; sideL > 0; sideL--){
+                whichSide[side]()
+                currEl = matrix[currX][currY];
+                if( currEl > inputNum ) return
             }
         }
 
-        circles++
+        function sumAround(side){
+            switch(side){
+                case 'right':
+                    return matrix[currX-1][currY] + matrix[currX][currY-1] + matrix[currX-1][currY+1] + matrix[currX-1][currY-1]  ;
+                case 'top':
+                    return matrix[currX][currY-1] + matrix[currX+1][currY] + matrix[currX-1][currY-1] + matrix[currX+1][currY-1] ;
+                case 'left':
+                    return matrix[currX+1][currY] + matrix[currX][currY+1] + matrix[currX+1][currY-1] + matrix[currX+1][currY+1] ;
+                case 'bottom':
+                    return matrix[currX][currY+1] + matrix[currX-1][currY] + matrix[currX-1][currY+1] + matrix[currX+1][currY+1]  ;
+            }
+        }
+
+        circle++
         sideLength += 2
     }
 
-    while( currE < input) newCircle()
-
+    while(currEl < inputNum) addNewCircle()
+    return currEl
 }
