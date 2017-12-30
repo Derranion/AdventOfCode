@@ -27,8 +27,8 @@
    but it will require more code ( forces to create coordinates )
    so i chose to use dependencies that i found in a matrix
 */
-function shortestWay(input){
-    if( input === 1 ) return 0
+function shortestWay(inputNum){
+    if( inputNum === 1 ) return 0
 
     let circles = 1,
         memSize = 9,
@@ -43,7 +43,7 @@ function shortestWay(input){
                 };
 
     //находим номер круга (+размер +значение ближайшего там числа)
-    while( memSize < input ){
+    while( memSize < inputNum ){
         circles++
         //размеры любого круга выглядят так: 1^2 (1) 3^2 (9) 5^2 (25) => (1+2n)^2
         memSize = Math.pow(1 + 2 * circles, 2)
@@ -56,7 +56,7 @@ function shortestWay(input){
     /* ближайших путей до любого круга 4 (прямые)
      узнаем к какому из них ближе введенное значение */
     for(var shortestWays = 4, shortestDistances = []; shortestWays > 0; shortestWays--){
-        shortestDistances.push( Math.abs( input - curr ) )
+        shortestDistances.push( Math.abs( inputNum - curr ) )
         /* новый круг разрастается на 8 элементов больше предыдущего, 8 \ 4 = 2, по 2 с каждого угла
          значит на каждой стороне будет добавляться circle * 2 элементов, т.е. добавив к центру одной стороны
          это значение получится центр другой стороны */
