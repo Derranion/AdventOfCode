@@ -1,6 +1,6 @@
 /*
  full task link: https://adventofcode.com/2017/day/3
- */
+*/
 
 //day 3 part 1
 /*
@@ -21,7 +21,7 @@
  Data from square 23 is carried only 2 steps: up twice.
  Data from square 1024 must be carried 31 steps.
  How many steps are required to carry the data from the square identified in your puzzle input all the way to the access port?
- */
+*/
 
 
 /*
