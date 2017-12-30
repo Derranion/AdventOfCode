@@ -1,6 +1,7 @@
 /*
  full task 1st day: https://adventofcode.com/2017/day/1
 
+ Day 1 part 1
  find the sum of all digits that match the next digit in the list. The list is circular, so the digit after the last digit is the first digit in the list.
 
  For example:
@@ -11,7 +12,9 @@
  '91212129' produces 9 because the only digit that matches the next one is the last digit, 9.
 */
 
-// day 1 part 1
+// to test
+var input = '91212129'
+
 function sumOfMatches(input){
     return input.split('').reduce((acc, curr, index, array)=>{
         if( curr === array[index+1] ) return acc += Number(curr)
@@ -20,9 +23,8 @@ function sumOfMatches(input){
     }, 0)
 }
 
-//day 1 part 2
 /*
-
+ Day 1 part 2
  Now, instead of considering the next digit, it wants you to consider the digit halfway around the circular list.
  That is, if your list contains 10 items, only include a digit in your sum if the digit 10/2 = 5 steps forward matches it.
  Fortunately, your list has an even number of elements.
@@ -37,7 +39,10 @@ function sumOfMatches(input){
 
 */
 
-function sumOfMatches2(input){
+// to test
+var input2 = '12131415'
+
+function sumOfMatchesHalfway(input){
     return input.split('').reduce((acc, curr, index, array)=>{
         let next = index + array.length / 2 ;
         if( curr === array[ next >= array.length ? next - array.length : next ] ) return acc += Number(curr)
