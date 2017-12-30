@@ -11,3 +11,16 @@
  The system's full passphrase list is available as your puzzle input. How many passphrases are valid?
  */
 
+var input = `aa bb cc dd ee
+aa bb cc dd aa
+isjur jppvano mnxxes zqwgnd giqh`
+
+function validateStrings(inputStr){
+    return inputStr.split('\n').reduce( (acc,curr) => checkMatches(curr) ? acc+1 : acc, 0)
+
+    function checkMatches(str){
+        let arrStr = str.split(' ')
+        // slicing current element, checking for it's duplicate
+        return arrStr.every( (el, index) => arrStr.slice(0, index).concat(arrStr.slice(index+1)).indexOf(el) == -1 )
+    }
+}
