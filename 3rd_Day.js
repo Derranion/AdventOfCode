@@ -1,9 +1,6 @@
 /*
  full task link: https://adventofcode.com/2017/day/3
-*/
 
-//day 3 part 1
-/*
  --- Day 3: Spiral Memory ---
  Each square on the grid is allocated in a spiral pattern starting at a location marked 1 and then counting up while spiraling outward. For example, the first few squares are allocated like this:
 
