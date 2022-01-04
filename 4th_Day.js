@@ -19,9 +19,9 @@ function validateStrings(inputStr){
     return inputStr.split('\n').reduce( (acc,curr) => checkMatches(curr) ? acc+1 : acc, 0)
 
     function checkMatches(str){
-        let arrStr = str.split(' ')
-        // slicing current element, checking for it's duplicate
-        return arrStr.every( (el, index) => arrStr.slice(0, index).concat(arrStr.slice(index+1)).indexOf(el) == -1 )
+        // slicing current element, checking for its duplicate
+        return str.split('')
+                  .every((curStr,ind,arr) => arr.slice(ind+1).indexOf(curStr) === -1)
     }
 }
 
@@ -50,8 +50,8 @@ function validateStrings2(inputStr){
     return inputStr.split('\n').reduce( (acc,curr) => checkMatches(curr) ? acc+1 : acc, 0)
 
     function checkMatches(str){
-        let arrStr = str.split(' ').map( el => el.split('').sort() ) // arrays or sorted strings
-        // slicing current element & checking for it's duplicate
+        let arrStr = str.split(' ').map( el => el.split('').sort() ) // arrays of sorted strings
+        // slicing current element & checking for its duplicate
         return arrStr.every( (currStrArr, index) => arrStr.slice(0, index).concat(arrStr.slice(index+1))
                                     .some( strArr => ''+strArr === ''+currStrArr ) == false )
     }
